@@ -1,0 +1,6 @@
+*.log
+logs
+target
+.settings
+.idea*
+project
