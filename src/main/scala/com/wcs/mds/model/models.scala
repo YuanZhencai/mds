@@ -236,3 +236,23 @@ object SyncLogs extends Table[(Timestamp, Timestamp)]("sync_log") {
   def pk = primaryKey("pk_sync", (lastDate, processedAt))
   def * = lastDate ~ processedAt
 }
+
+object MyTest {
+  import slick.driver.PostgresDriver.simple._
+  import scala.slick.session.Database
+  import Database.threadLocalSession
+  import scala.slick.lifted.Query
+  import Util._
+
+  def testSlickWithCaseClass() {
+    val db = Database.forURL("jdbc:postgresql://localhost:5432/test?user=test&password=test", "org.postgresql.Driver")
+    val ts = new Timestamp(System.currentTimeMillis)
+    val sl = SyncLog(ts, ts)
+    case class AlternativeSyncLog(ts1: Timestamp, ts2: Timestamp)
+    val as = AlternativeSyncLog(dateToTimestamp("2014-01-01"), ts)
+    db.withSession {
+      SyncLogs.insert(SyncLog.unapply(sl).get)
+      SyncLogs.insert(AlternativeSyncLog.unapply(as).get)
+    }
+  }
+}
