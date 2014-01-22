@@ -6,8 +6,7 @@ import akka.actor.ActorLogging
 import akka.actor.Props
 import java.sql.Timestamp
 import slick.driver.PostgresDriver.simple._
-import scala.slick.session.Database
-import Database.threadLocalSession
+import scala.slick.jdbc.JdbcBackend.Database.dynamicSession
 import scala.slick.lifted.Query
 
 class DataLoader extends Actor with ActorLogging {
@@ -26,10 +25,11 @@ class DataLoader extends Actor with ActorLogging {
 
   def buildSapRequest(db: Database): RequestSapData = {
     var lastSuccess = new Timestamp(0L)
-    db.withSession {
-      val q = Query(SyncLogs).sortBy(_.lastDate.desc).take(1)
+    db.withDynSession {
+      val syncLogs = TableQuery[SyncLogs]
+      val q = syncLogs.sortBy(_.lastDate.desc).take(1)
       for (r <- q) {
-        lastSuccess = r._1
+        lastSuccess = r.lastDate
       }
     }
     RequestSapData(Util.timestampToDate(new Timestamp(lastSuccess.getTime - 1000 * 60 * 60 * 24)), Util.timestampToDate(new Timestamp(System.currentTimeMillis)), null)
