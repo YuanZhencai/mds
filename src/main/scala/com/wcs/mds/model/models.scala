@@ -1,8 +1,8 @@
 package com.wcs.mds.model
 
 import java.sql.Timestamp
-import scala.slick.driver.PostgresDriver.simple._
 import java.text.SimpleDateFormat
+import scala.slick.driver.PostgresDriver.simple._
 
 object Util {
   def dateToTimestamp(date: String): Timestamp = {
@@ -39,7 +39,7 @@ case class TabZhrMds001(val begda: Timestamp,
                         val refda: Timestamp,
                         val flag1: String)
 
-object TabZhrMds001 {
+object TabZhrMds001c {
   import Util._
   def fromMap(map: Map[String,String]): TabZhrMds001 = {
     TabZhrMds001(
@@ -66,7 +66,7 @@ object TabZhrMds001 {
   }
 }
 
-object TabZhrMds001s extends Table[(Timestamp, Timestamp, String, String, String, String, String, String, String, String, String, String, String, String, String, String, Timestamp, Timestamp, String)]("tab_zhr_mds_001") {
+class TabZhrMds001s(tag: Tag) extends Table[TabZhrMds001](tag, "tab_zhr_mds_001") {
   def begda = column[Timestamp]("begda", O.NotNull)
   def endda = column[Timestamp]("endda", O.NotNull)
   def pernr = column[String]("pernr", O.PrimaryKey)
@@ -86,8 +86,9 @@ object TabZhrMds001s extends Table[(Timestamp, Timestamp, String, String, String
   def aedtm = column[Timestamp]("aedtm")
   def refda = column[Timestamp]("refda")
   def flag1 = column[String]("flag1")
-  def * = begda ~ endda ~ pernr ~ nachn ~ name2 ~ gesch ~ icnum ~ usridLong ~ usrid ~ werks ~ bukrs ~ persg ~ ptext ~ stat2 ~ kostl ~ kostx ~ aedtm ~ refda ~ flag1
+  def * = (begda, endda, pernr, nachn, name2, gesch, icnum, usridLong, usrid, werks, bukrs, persg, ptext, stat2, kostl, kostx, aedtm, refda, flag1) <> (TabZhrMds001.tupled, TabZhrMds001.unapply)
 }
+//val tabZhrMds001s = TableQuery[TabZhrMds001s]
 
 case class TabZhrMds002(val begda: Timestamp,
                         val endda: Timestamp,
@@ -112,7 +113,7 @@ case class TabZhrMds002(val begda: Timestamp,
                         val refda: Timestamp,
                         val flag1: String)
 
-object TabZhrMds002 {
+object TabZhrMds002c {
   import Util._
   def fromMap(map: Map[String,String]): TabZhrMds002 = {
     TabZhrMds002(
@@ -142,7 +143,7 @@ object TabZhrMds002 {
   }
 }
 
-object TabZhrMds002s extends Table[(Timestamp, Timestamp, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, String, Timestamp, Timestamp, String)]("tab_zhr_mds_002") {
+class TabZhrMds002s(tag: Tag) extends Table[TabZhrMds002](tag, "tab_zhr_mds_002") {
   def begda = column[Timestamp]("begda", O.NotNull)
   def endda = column[Timestamp]("endda", O.NotNull)
   def otype = column[String]("otype", O.NotNull)
@@ -166,7 +167,7 @@ object TabZhrMds002s extends Table[(Timestamp, Timestamp, String, String, String
   def refda = column[Timestamp]("refda")
   def flag1 = column[String]("flag1")
   def pk = primaryKey("pk002", (otype, objid))
-  def * = begda ~ endda ~ otype ~ objid ~ short ~ stext ~ zcjid ~ zcjidms ~ zhrzzdwid ~ zhrzzdwms ~ zhrbzzwid ~ zhrbzzwmc ~ zhrzyxid ~ zhrzyxmc ~ zhrbzbmid ~ zhrbzbmmc ~ zhrtxxlid ~ zhrtxxlms ~ zhrjstdid ~ aedtm ~ refda ~ flag1
+  def * = (begda, endda, otype, objid, short, stext, zcjid, zcjidms, zhrzzdwid, zhrzzdwms, zhrbzzwid, zhrbzzwmc, zhrzyxid, zhrzyxmc, zhrbzbmid, zhrbzbmmc, zhrtxxlid, zhrtxxlms, zhrjstdid, aedtm, refda, flag1) <> (TabZhrMds002.tupled, TabZhrMds002.unapply)
 }
 
 case class TabZhrMds003(val begda: Timestamp,
@@ -185,7 +186,7 @@ case class TabZhrMds003(val begda: Timestamp,
                         val aedtm: Timestamp,
                         val flag1: String)
 
-object TabZhrMds003 {
+object TabZhrMds003c {
   import Util._
   def fromMap(map: Map[String,String]): TabZhrMds003 = {
     TabZhrMds003(
@@ -208,7 +209,7 @@ object TabZhrMds003 {
   }
 }
 
-object TabZhrMds003s extends Table[(Timestamp, Timestamp, String, String, String, String, String, String, String, String, String, String, String, Timestamp, String)]("tab_zhr_mds_003") {
+class TabZhrMds003s(tag: Tag) extends Table[TabZhrMds003](tag, "tab_zhr_mds_003") {
   def begda = column[Timestamp]("begda", O.NotNull)
   def endda = column[Timestamp]("endda", O.NotNull)
   def otype = column[String]("otype", O.NotNull)
@@ -225,34 +226,29 @@ object TabZhrMds003s extends Table[(Timestamp, Timestamp, String, String, String
   def aedtm = column[Timestamp]("aedtm")
   def flag1 = column[String]("flag1")
   def pk = primaryKey("pk003", (otype, objid, relat, sclas, sobid))
-  def * = begda ~ endda ~ otype ~ objid ~ relat ~ sclas ~ sobid ~ prozt ~ priox ~ backup1 ~ backup2 ~ backup3 ~ backup4 ~ aedtm ~ flag1
+  def * = (begda, endda, otype, objid, relat, sclas, sobid, prozt, priox, backup1, backup2, backup3, backup4, aedtm, flag1) <> (TabZhrMds003.tupled, TabZhrMds003.unapply)
 }
 
 case class SyncLog(val lastDate: Timestamp, val processedAt: Timestamp)
 
-object SyncLogs extends Table[(Timestamp, Timestamp)]("sync_log") {
+class SyncLogs(tag: Tag) extends Table[SyncLog](tag, "sync_log") {
   def lastDate = column[Timestamp]("last_date")
   def processedAt = column[Timestamp]("processed_at")
   def pk = primaryKey("pk_sync", (lastDate, processedAt))
-  def * = lastDate ~ processedAt
+  def * = (lastDate, processedAt) <> (SyncLog.tupled, SyncLog.unapply)
 }
 
 object MyTest {
-  import slick.driver.PostgresDriver.simple._
-  import scala.slick.session.Database
-  import Database.threadLocalSession
-  import scala.slick.lifted.Query
+  import scala.slick.jdbc.JdbcBackend.Database.dynamicSession
   import Util._
 
   def testSlickWithCaseClass() {
     val db = Database.forURL("jdbc:postgresql://localhost:5432/test?user=test&password=test", "org.postgresql.Driver")
     val ts = new Timestamp(System.currentTimeMillis)
     val sl = SyncLog(ts, ts)
-    case class AlternativeSyncLog(ts1: Timestamp, ts2: Timestamp)
-    val as = AlternativeSyncLog(dateToTimestamp("2014-01-01"), ts)
-    db.withSession {
-      SyncLogs.insert(SyncLog.unapply(sl).get)
-      SyncLogs.insert(AlternativeSyncLog.unapply(as).get)
+    db.withDynSession {
+      val syncLogs = TableQuery[SyncLogs]
+      syncLogs.insert(sl)
     }
   }
 }
