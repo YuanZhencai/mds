@@ -57,7 +57,7 @@ class SapConnector extends Actor with ActorLogging {
     log.info(s"[TAB_ZHR_MDS001] has ${table.getNumRows} rows.")
     for (i <- 0 until table.getNumRows) {
       table.setRow(i)
-      val mds001 = TabZhrMds001.fromMap(rowAsMap(table.getFieldIterator))
+      val mds001 = TabZhrMds001c.fromMap(rowAsMap(table.getFieldIterator))
       dbConnector ! mds001
     }
     log.info("[TAB_ZHR_MDS001] completed.")
@@ -67,7 +67,7 @@ class SapConnector extends Actor with ActorLogging {
     log.info(s"[TAB_ZHR_MDS002] has ${table.getNumRows} rows.")
     for (i <- 0 until table.getNumRows) {
       table.setRow(i)
-      val mds002 = TabZhrMds002.fromMap(rowAsMap(table.getFieldIterator))
+      val mds002 = TabZhrMds002c.fromMap(rowAsMap(table.getFieldIterator))
       dbConnector ! mds002
     }
     log.info("[TAB_ZHR_MDS002] completed.")
@@ -77,7 +77,7 @@ class SapConnector extends Actor with ActorLogging {
     log.info(s"[TAB_ZHR_MDS003] has ${table.getNumRows} rows.")
     for (i <- 0 until table.getNumRows) {
       table.setRow(i)
-      val mds003 = TabZhrMds003.fromMap(rowAsMap(table.getFieldIterator))
+      val mds003 = TabZhrMds003c.fromMap(rowAsMap(table.getFieldIterator))
       dbConnector ! mds003
     }
     log.info("[TAB_ZHR_MDS003] completed.")
