@@ -5,7 +5,7 @@ import akka.actor.ActorLogging
 import com.wcs.mds.model._
 import com.wcs.mds.model.SyncLog
 import slick.driver.PostgresDriver.simple._
-import scala.slick.jdbc.JdbcBackend.Database.dynamicSession
+//import scala.slick.jdbc.JdbcBackend.Database.dynamicSession
 
 class DbConnector extends Actor with ActorLogging {
 
@@ -16,7 +16,7 @@ class DbConnector extends Actor with ActorLogging {
     case msg @ TabZhrMds001(_, _, pernr, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) =>
       log.info(s"Received $msg.")
       try {
-        db.withDynTransaction {
+        db.withTransaction { implicit session =>
           val tabZhrMds001s = TableQuery[TabZhrMds001s]
           tabZhrMds001s.filter(_.pernr === pernr).delete
           tabZhrMds001s.insert(msg)
@@ -29,7 +29,7 @@ class DbConnector extends Actor with ActorLogging {
     case msg @ TabZhrMds002(_, _, otype, objid, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) =>
       log.info(s"Received $msg.")
       try {
-        db.withDynTransaction {
+        db.withTransaction { implicit session =>
           val tabZhrMds002s = TableQuery[TabZhrMds002s]
           tabZhrMds002s.filter(_.otype === otype).filter(_.objid === objid).delete
           tabZhrMds002s.insert(msg)
@@ -42,7 +42,7 @@ class DbConnector extends Actor with ActorLogging {
     case msg @ TabZhrMds003(_, _, otype, objid, relat, sclas, sobid, _, _, _, _, _, _, _, _) =>
       log.info(s"Received $msg.")
       try {
-        db.withDynTransaction {
+        db.withTransaction { implicit session =>
           val tabZhrMds003s = TableQuery[TabZhrMds003s]
           tabZhrMds003s.filter(_.otype === otype).filter(_.objid === objid).filter(_.relat === relat).filter(_.sclas === sclas).filter(_.sobid === sobid).delete
           tabZhrMds003s.insert(msg)
@@ -55,7 +55,7 @@ class DbConnector extends Actor with ActorLogging {
     case msg @ SyncLog(lastDate, processedAt) =>
       log.info(s"Received $msg.")
       try {
-        db.withDynTransaction {
+        db.withTransaction { implicit session =>
           val syncLogs = TableQuery[SyncLogs]
           syncLogs.insert(msg)
         }

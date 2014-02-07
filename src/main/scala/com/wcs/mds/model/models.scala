@@ -239,14 +239,13 @@ class SyncLogs(tag: Tag) extends Table[SyncLog](tag, "sync_log") {
 }
 
 object MyTest {
-  import scala.slick.jdbc.JdbcBackend.Database.dynamicSession
   import Util._
 
   def testSlickWithCaseClass() {
     val db = Database.forURL("jdbc:postgresql://localhost:5432/test?user=test&password=test", "org.postgresql.Driver")
     val ts = new Timestamp(System.currentTimeMillis)
     val sl = SyncLog(ts, ts)
-    db.withDynSession {
+    db.withSession { implicit session =>
       val syncLogs = TableQuery[SyncLogs]
       syncLogs.insert(sl)
     }
