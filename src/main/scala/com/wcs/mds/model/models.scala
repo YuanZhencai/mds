@@ -17,6 +17,9 @@ object Util {
     val formatter = new SimpleDateFormat("yyyy-MM-dd")
     formatter.format(ts)
   }
+  def timestampToEpoc(ts: Timestamp): String = {
+    ts.getTime.toString
+  }
 }
 
 case class TabZhrMds001(val begda: Timestamp,
@@ -38,6 +41,26 @@ case class TabZhrMds001(val begda: Timestamp,
                         val aedtm: Timestamp,
                         val refda: Timestamp,
                         val flag1: String)
+
+case class TabZhrMds001r(val begda: String,
+                         val endda: String,
+                         val pernr: String,
+                         val nachn: String,
+                         val name2: String,
+                         val gesch: String,
+                         val icnum: String,
+                         val usridLong: String,
+                         val usrid: String,
+                         val werks: String,
+                         val bukrs: String,
+                         val persg: String,
+                         val ptext: String,
+                         val stat2: String,
+                         val kostl: String,
+                         val kostx: String,
+                         val aedtm: String,
+                         val refda: String,
+                         val flag1: String)
 
 object TabZhrMds001c {
   import Util._
@@ -62,6 +85,29 @@ object TabZhrMds001c {
       dateToTimestamp(map.getOrElse("AEDTM", "0001-01-01")),
       dateToTimestamp(map.getOrElse("REFDA", "0001-01-01")),
       map.getOrElse("FLAG1", "")
+    )
+  }
+  def toRecord(data: TabZhrMds001): TabZhrMds001r = {
+    TabZhrMds001r(
+      timestampToEpoc(data.begda),
+      timestampToEpoc(data.endda),
+      data.pernr,
+      data.nachn,
+      data.name2,
+      data.gesch,
+      data.icnum,
+      data.usridLong,
+      data.usrid,
+      data.werks,
+      data.bukrs,
+      data.persg,
+      data.ptext,
+      data.stat2,
+      data.kostl,
+      data.kostx,
+      timestampToEpoc(data.aedtm),
+      timestampToEpoc(data.refda),
+      data.flag1
     )
   }
 }
@@ -113,6 +159,29 @@ case class TabZhrMds002(val begda: Timestamp,
                         val refda: Timestamp,
                         val flag1: String)
 
+case class TabZhrMds002r(val begda: String,
+                         val endda: String,
+                         val otype: String,
+                         val objid: String,
+                         val short: String,
+                         val stext: String,
+                         val zcjid: String,
+                         val zcjidms: String,
+                         val zhrzzdwid: String,
+                         val zhrzzdwms: String,
+                         val zhrbzzwid: String,
+                         val zhrbzzwmc: String,
+                         val zhrzyxid: String,
+                         val zhrzyxmc: String,
+                         val zhrbzbmid: String,
+                         val zhrbzbmmc: String,
+                         val zhrtxxlid: String,
+                         val zhrtxxlms: String,
+                         val zhrjstdid: String,
+                         val aedtm: String,
+                         val refda: String,
+                         val flag1: String)
+
 object TabZhrMds002c {
   import Util._
   def fromMap(map: Map[String,String]): TabZhrMds002 = {
@@ -139,6 +208,32 @@ object TabZhrMds002c {
       dateToTimestamp(map.getOrElse("AEDTM", "0001-01-01")),
       dateToTimestamp(map.getOrElse("REFDA", "0001-01-01")),
       map.getOrElse("FLAG1", "")
+    )
+  }
+  def toRecord(data: TabZhrMds002): TabZhrMds002r = {
+    TabZhrMds002r(
+      timestampToEpoc(data.begda),
+      timestampToEpoc(data.endda),
+      data.otype,
+      data.objid,
+      data.short,
+      data.stext,
+      data.zcjid,
+      data.zcjidms,
+      data.zhrzzdwid,
+      data.zhrzzdwms,
+      data.zhrbzzwid,
+      data.zhrbzzwmc,
+      data.zhrzyxid,
+      data.zhrzyxmc,
+      data.zhrbzbmid,
+      data.zhrbzbmmc,
+      data.zhrtxxlid,
+      data.zhrtxxlms,
+      data.zhrjstdid,
+      timestampToEpoc(data.aedtm),
+      timestampToEpoc(data.refda),
+      data.flag1
     )
   }
 }
@@ -186,6 +281,22 @@ case class TabZhrMds003(val begda: Timestamp,
                         val aedtm: Timestamp,
                         val flag1: String)
 
+case class TabZhrMds003r(val begda: String,
+                         val endda: String,
+                         val otype: String,
+                         val objid: String,
+                         val relat: String,
+                         val sclas: String,
+                         val sobid: String,
+                         val prozt: String,
+                         val priox: String,
+                         val backup1: String,
+                         val backup2: String,
+                         val backup3: String,
+                         val backup4: String,
+                         val aedtm: String,
+                         val flag1: String)
+
 object TabZhrMds003c {
   import Util._
   def fromMap(map: Map[String,String]): TabZhrMds003 = {
@@ -205,6 +316,25 @@ object TabZhrMds003c {
       map.getOrElse("BACKUP4", ""),
       dateToTimestamp(map.getOrElse("AEDTM", "0001-01-01")),
       map.getOrElse("FLAG1", "")
+    )
+  }
+  def toRecord(data: TabZhrMds003): TabZhrMds003r = {
+    TabZhrMds003r(
+      timestampToEpoc(data.begda),
+      timestampToEpoc(data.endda),
+      data.otype,
+      data.objid,
+      data.relat,
+      data.sclas,
+      data.sobid,
+      data.prozt,
+      data.priox,
+      data.backup1,
+      data.backup2,
+      data.backup3,
+      data.backup4,
+      timestampToEpoc(data.aedtm),
+      data.flag1
     )
   }
 }
@@ -237,6 +367,21 @@ class SyncLogs(tag: Tag) extends Table[SyncLog](tag, "sync_log") {
   def pk = primaryKey("pk_sync", (lastDate, processedAt))
   def * = (lastDate, processedAt) <> (SyncLog.tupled, SyncLog.unapply)
 }
+
+object JsonCodecs {
+  import argonaut._, Argonaut._
+  import spray.http.HttpEntity
+  import spray.http.MediaTypes._
+  import spray.httpx.marshalling._
+  import spray.httpx.unmarshalling._
+  implicit def TabZhrMds001rCodec = casecodec19(TabZhrMds001r.apply, TabZhrMds001r.unapply)("begda", "endda", "pernr", "nachn", "name2", "gesch", "icnum", "usridLong", "usrid", "werks", "bukrs", "persg", "ptext", "stat2", "kostl", "kostx", "aedtm", "refda", "flag1")
+  implicit def TabZhrMds002rCodec = casecodec22(TabZhrMds002r.apply, TabZhrMds002r.unapply)("begda", "endda", "otype", "objid", "short", "stext", "zcjid", "zcjidms", "zhrzzdwid", "zhrzzdwms", "zhrbzzwid", "zhrbzzwmc", "zhrzyxid", "zhrzyxmc", "zhrbzbmid", "zhrbzbmmc", "zhrtxxlid", "zhrtxxlms", "zhrjstdid", "aedtm", "refda", "flag1")
+  implicit def TabZhrMds003rCodec = casecodec15(TabZhrMds003r.apply, TabZhrMds003r.unapply)("begda", "endda", "otype", "objid", "relat", "sclas", "sobid", "prozt", "priox", "backup1", "backup2", "backup3", "backup4", "aedtm", "flag1")
+  implicit val TabZhrMds001rListMarshaller = Marshaller.of[List[TabZhrMds001r]](`application/json`) { (value, contentType, ctx) => ctx.marshalTo(HttpEntity(contentType, value.asJson.toString)) }
+  implicit val TabZhrMds002rListMarshaller = Marshaller.of[List[TabZhrMds002r]](`application/json`) { (value, contentType, ctx) => ctx.marshalTo(HttpEntity(contentType, value.asJson.toString)) }
+  implicit val TabZhrMds003rListMarshaller = Marshaller.of[List[TabZhrMds003r]](`application/json`) { (value, contentType, ctx) => ctx.marshalTo(HttpEntity(contentType, value.asJson.toString)) }
+}
+
 
 object MyTest {
   import Util._

@@ -8,7 +8,7 @@ import akka.io.IO
 import com.wcs.mds.api.RestActor
 import com.wcs.mds.model.LoadNewData
 import scala.concurrent.duration.DurationInt
-import com.wcs.mds.service.DataLoader
+import com.wcs.mds.service._
 
 class Bootstrapper extends Bootable {
 
@@ -19,6 +19,7 @@ class Bootstrapper extends Bootable {
     val server = system.actorOf(Props[RestActor], "server")
     IO(Http) ! Http.Bind(server, config.getString("rest.listening"), config.getInt("rest.port"))
     val dataLoader = system.actorOf(Props[DataLoader], "data-loader")
+    val dbReader = system.actorOf(Props[DbReader], "db-reader")
     import system.dispatcher
     system.scheduler.schedule(5.seconds, 3600.seconds, dataLoader, LoadNewData)
   }

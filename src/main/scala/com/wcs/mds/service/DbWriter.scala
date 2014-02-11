@@ -5,9 +5,8 @@ import akka.actor.ActorLogging
 import com.wcs.mds.model._
 import com.wcs.mds.model.SyncLog
 import slick.driver.PostgresDriver.simple._
-//import scala.slick.jdbc.JdbcBackend.Database.dynamicSession
 
-class DbConnector extends Actor with ActorLogging {
+class DbWriter extends Actor with ActorLogging {
 
   val conf = context.system.settings.config
   val db = Database.forURL(url = conf.getString("jdbc.url"), driver = conf.getString("jdbc.driver"))

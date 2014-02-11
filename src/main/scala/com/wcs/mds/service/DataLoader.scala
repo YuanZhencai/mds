@@ -6,7 +6,6 @@ import akka.actor.ActorLogging
 import akka.actor.Props
 import java.sql.Timestamp
 import slick.driver.PostgresDriver.simple._
-// import scala.slick.jdbc.JdbcBackend.Database.dynamicSession
 import scala.slick.lifted.Query
 
 class DataLoader extends Actor with ActorLogging {
