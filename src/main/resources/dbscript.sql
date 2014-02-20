@@ -167,19 +167,19 @@ select distinct pernr, at from (
     select sobid as objid, aedtm as at from tab_zhr_mds_003 where otype = 'S' and relat = '008' and sclas = 'P' and flag1 <> 'D'
 ) as vw order by at, pernr;
 
-create or replace view vw_sync_dates as
-select distinct processed_at::date as at from sync_log order by at;
+create or replace view vw_dates as
+select date_trunc('day', at)::date as at from generate_series('2012-01-01'::date, current_timestamp::date, '1 day'::interval) at;
 
 create or replace view vw_tiam_org as
 select distinct on (v1.at, v2.objid) v1.at, v3.*
-from vw_sync_dates as v1
+from vw_dates as v1
 inner join vw_org_changed as v2 on (v2.at >= v1.at and v2.at <= current_timestamp)
 inner join vw_wilmar_org as v3 on (v3.ou = v2.objid)
 order by v1.at, v2.objid;
 
 create or replace view vw_tiam_per as
 select distinct on (v1.at, v2.pernr) v1.at, v3.*
-from vw_sync_dates as v1
+from vw_dates as v1
 inner join vw_person_changed as v2 on (v2.at >= v1.at and v2.at <= current_timestamp)
 inner join vw_wilmar_person as v3 on (v3.employee_number = v2.pernr)
 order by v1.at, v2.pernr;
